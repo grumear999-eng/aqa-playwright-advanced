@@ -1,34 +1,35 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('REST API Tests', () => {
-    const API_URL = 'https://reqres.in/api';
+const API_URL = 'https://jsonplaceholder.typicode.com';
 
+test.describe('REST API Tests', () => {
     test('should GET list of users and validate schema', async ({ request }) => {
-        const response = await request.get(`${API_URL}/users?page=2`);
+        const response = await request.get(`${API_URL}/users`);
         expect(response.status()).toBe(200);
 
         const body = await response.json();
-        expect(body.page).toBe(2);
-        expect(body.data).toBeInstanceOf(Array);
-        expect(body.data.length).toBeGreaterThan(0);
-        expect(body.data[0]).toHaveProperty('id');
-        expect(body.data[0]).toHaveProperty('email');
+        expect(body).toBeInstanceOf(Array);
+        expect(body.length).toBeGreaterThan(0);
+        expect(body[0]).toHaveProperty('id');
+        expect(body[0]).toHaveProperty('email');
+        expect(body[0]).toHaveProperty('name');
     });
 
-    test('should POST new user successfully', async ({ request }) => {
-        const newUser = {
-            name: 'Aleksandr',
-            job: 'QA Engineer',
+    test('should POST new post successfully', async ({ request }) => {
+        const newPost = {
+            title: 'Playwright API Test',
+            body: 'Testing REST API with Playwright',
+            userId: 1,
         };
 
-        const response = await request.post(`${API_URL}/users`, {
-            data: newUser,
+        const response = await request.post(`${API_URL}/posts`, {
+            data: newPost,
         });
 
         expect(response.status()).toBe(201);
         const body = await response.json();
         expect(body).toHaveProperty('id');
-        expect(body.name).toBe(newUser.name);
-        expect(body.job).toBe(newUser.job);
+        expect(body.title).toBe(newPost.title);
+        expect(body.userId).toBe(newPost.userId);
     });
 });
