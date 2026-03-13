@@ -7,7 +7,7 @@ export class TodoPage extends BasePage {
     readonly todoCount: Locator;
 
     constructor(page: Page) {
-        super(page, '/');
+        super(page, './');
         this.newTodoInput = page.getByPlaceholder('What needs to be done?');
         this.todoItems = page.getByTestId('todo-item');
         this.todoCount = page.getByTestId('todo-count');
